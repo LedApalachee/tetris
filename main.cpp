@@ -201,7 +201,7 @@ void input(Figure *fig)
 			if (check_move_collision(fig, Coords{-1,0})) move_figure(fig, Coords{-1,0});
 			break;
 		case 's':
-			if (check_move_collision(fig, Coords{0,1})) move_figure(fig, Coords{0,1});
+			if (check_move_collision(fig, Coords{0,2})) move_figure(fig, Coords{0,2});
 			break;
 		case 'j':
 			if (check_rotation_collision(fig, fig->parts[1])) rotate_figure(fig, fig->parts[1]);
