@@ -14,14 +14,18 @@ bool game_over;
 
 
 ///////////////////* FIELD */////////////////////////
-// I used constant sizes of field bc if they're dynamic
-// there is some shit in the end of field displaying
-const int fieldsizeX = 10;
-const int fieldsizeY = 20;
-bool field[fieldsizeX][fieldsizeY];
+int fieldsizeX;
+int fieldsizeY;
+bool** field;
 
-void init_field()
+void init_field(int sx, int sy)
 {
+	fieldsizeX = sx;
+	fieldsizeY = sy;
+	field = new bool*[sx];
+	for (int x = 0; x < fieldsizeX; ++x)
+		field[x] = new bool[sy];
+
 	for (int x = 0; x < fieldsizeX; ++x)
 		for (int y = 0; y < fieldsizeY; ++y)
 			field[x][y] = false;
@@ -159,12 +163,16 @@ void form_figure(Figure *fig, FigureType ft)
 
 
 ///////////////////* RENDER *//////////////////////////
-const int rendersizeX = fieldsizeX + 3; // 3 is for two vertical borders and one '\n'
-const int rendersizeY = fieldsizeY + 2; // 2 is for two horizontal borders
-char render[rendersizeX * rendersizeY];
+int rendersizeX;
+int rendersizeY;
+char* render;
 
 void init_render()
 {
+	rendersizeX = fieldsizeX + 3;
+	rendersizeY = fieldsizeY + 2;
+	render = new char[rendersizeX * rendersizeY + 1];
+
 	// building field borders and '\n' symbols
 	for (int x = 0; x < rendersizeX-1; ++x)
 		render[x] = render[rendersizeX * rendersizeY - 2 - x] = '_';
@@ -174,6 +182,7 @@ void init_render()
 		render[y * rendersizeX + rendersizeX - 1] = '\n';
 	}
 	render[0] = render[fieldsizeX+1] = ' ';
+	render[rendersizeX * rendersizeY] = '\0';
 }
 
 void update_render(Figure *f = nullptr)
@@ -277,9 +286,25 @@ int main(int argc, char **argv)
 	score = 0;
 	game_over = false;
 
-	if (argc >= 2) interval = std::stoi(argv[1]);
+	if (argc == 2)
+	{
+		init_field(10, 20);
+		interval = std::atoi(argv[1]);
+	}
+	else if (argc == 3)
+	{
+		init_field(std::atoi(argv[1]), std::atoi(argv[2]));
+	}
+	else if (argc >= 4)
+	{
+		init_field(std::atoi(argv[1]), std::atoi(argv[2]));
+		interval = std::atoi(argv[3]);
+	}
+	else
+	{
+		init_field(10, 20);
+	}
 
-	init_field();
 	init_render();
 
 	Coords coords[4];
@@ -305,5 +330,9 @@ int main(int argc, char **argv)
 	std::cout << render;
 	std::cout << "\n\nscore: " << score << '\n';
 
+	delete[] render;
+	for (int x = 0; x < fieldsizeX; ++x)
+		delete[] field[x];
+	delete[] field;
 	return 0;
 }
