@@ -209,6 +209,14 @@ void input(Figure *fig)
 		case 'a':
 			if (check_move_collision(fig, Coords{-1,0})) move_figure(fig, Coords{-1,0});
 			break;
+		case 'l':
+			if (check_move_collision(fig, Coords{2,0})) move_figure(fig, Coords{2,0});
+			else if (check_move_collision(fig, Coords{1,0})) move_figure(fig, Coords{1,0});
+			break;
+		case 'k':
+			if (check_move_collision(fig, Coords{-2,0})) move_figure(fig, Coords{-2,0});
+			else if (check_move_collision(fig, Coords{-1,0})) move_figure(fig, Coords{-1,0});
+			break;
 		case 's':
 			if (check_move_collision(fig, Coords{0,2})) move_figure(fig, Coords{0,2});
 			break;
